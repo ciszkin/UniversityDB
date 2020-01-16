@@ -5,21 +5,21 @@ import java.util.Objects;
 
 public class Lecturer extends Person {
     private static final long serialVersionUID = 476007368263964558L;
-    private String subject;
+    private Subject subject;
 
     public Lecturer(String name,
                     String surname,
                     Date birthDate,
-                    String subject) {
+                    Subject subject) {
         super(name, surname, birthDate);
         this.subject = subject;
     }
 
-    public String getSubject() {
+    public Subject getSubject() {
         return subject;
     }
 
-    public void setSubject(String subject) {
+    public void setSubject(Subject subject) {
         this.subject = subject;
     }
 
