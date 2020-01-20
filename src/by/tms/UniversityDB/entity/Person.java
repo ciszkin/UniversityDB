@@ -12,14 +12,16 @@ public abstract class Person implements Serializable {
     private String name;
     private String surname;
     private Date birthDate;
+    private String pass;
 
     public Person() {
     }
 
-    public Person(String name, String surname, Date birthDate) {
+    public Person(String name, String surname, Date birthDate, String pass) {
         this.name = name;
         this.surname = surname;
         this.birthDate = birthDate;
+        this.pass = pass;
     }
 
     public int getId() {
@@ -38,6 +40,14 @@ public abstract class Person implements Serializable {
         return birthDate;
     }
 
+    public String getPass() {
+        return pass;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -46,12 +56,13 @@ public abstract class Person implements Serializable {
         return id == person.id &&
                 Objects.equals(name, person.name) &&
                 Objects.equals(surname, person.surname) &&
-                Objects.equals(birthDate, person.birthDate);
+                Objects.equals(birthDate, person.birthDate) &&
+                Objects.equals(pass, person.pass);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, surname, birthDate);
+        return Objects.hash(id, name, surname, birthDate, pass);
     }
 
     @Override

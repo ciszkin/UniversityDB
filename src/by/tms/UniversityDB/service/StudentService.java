@@ -1,7 +1,5 @@
 package by.tms.UniversityDB.service;
 
-import by.tms.UniversityDB.entity.Faculty;
-//import by.tms.UniversityDB.entity.Student;
 import by.tms.UniversityDB.entity.Subject;
 
 public interface StudentService {
@@ -11,5 +9,6 @@ public interface StudentService {
     String getLecturerInfo(int lecturerID);
     int[] getMyRank(Subject subject);
     Subject[] getSubjects();
+    void logOut();
 
 }

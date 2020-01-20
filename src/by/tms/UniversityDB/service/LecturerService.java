@@ -9,7 +9,8 @@ public interface LecturerService {
     int[] getMyStudents();
     String getStudentInfo(int studentID);
     void setStudent(int studentID);
-    int[] getRank();
+    int[] getRank(int studentID);
     void setMark(int mark);
+    void logOut();
 
 }

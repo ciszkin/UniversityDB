@@ -12,8 +12,8 @@ public class Student extends Person {
 
     public Student(String name,
                    String surname,
-                   Date birthDate, Subject[] subjects) {
-        super(name, surname, birthDate);
+                   Date birthDate, String pass, Subject[] subjects) {
+        super(name, surname, birthDate, pass);
         rankJournal = new RankJournal(subjects);
     }
 

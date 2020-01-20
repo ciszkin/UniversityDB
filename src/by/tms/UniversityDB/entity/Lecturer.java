@@ -10,8 +10,9 @@ public class Lecturer extends Person {
     public Lecturer(String name,
                     String surname,
                     Date birthDate,
+                    String pass,
                     Subject subject) {
-        super(name, surname, birthDate);
+        super(name, surname, birthDate, pass);
         this.subject = subject;
     }
 

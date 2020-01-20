@@ -2,11 +2,13 @@ package by.tms.UniversityDB.service;
 
 import by.tms.UniversityDB.entity.*;
 
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FacultyService implements AdminService, LecturerService, StudentService {
+public class FacultyService implements AdminService, LecturerService, StudentService, AuthService {
 
     private static Map<String, Faculty> faculties = new HashMap<>();
 
@@ -14,6 +16,68 @@ public class FacultyService implements AdminService, LecturerService, StudentSer
     private Student currentStudent = null;
     private Lecturer currentLecturer = null;
     private Person currentPerson = null;
+
+
+
+
+    public FacultyService() {
+    }
+
+    //-------------------AuthService implementation----------------------------
+
+    @Override
+    public StudentService logInAsStudent(int personID, String pass) {
+        Person[] currentFacultyStudents = currentFaculty.getStudents();
+        currentPerson = getPerson(currentFacultyStudents, personID);
+        if(currentPerson != null && currentPerson.getPass().equals(pass)) {
+            return this;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public LecturerService logInAsLecturer(int personID, String pass) {
+        Person[] currentFacultyLecturers = currentFaculty.getLecturers();
+        currentPerson = getPerson(currentFacultyLecturers, personID);
+        if (currentPerson != null && currentPerson.getPass().equals(pass)) {
+            return this;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public FacultyService logInAsAdmin() {
+        return this;
+    }
+
+    @Override
+    public void logOut() {
+        currentPerson = null;
+        try {
+            ObjectOutputStream baseFile = new ObjectOutputStream(new FileOutputStream("base.txt"));
+            baseFile.writeObject(faculties);
+            baseFile.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void loadBase() {
+        System.out.println("Try to load base!");
+        try {
+            ObjectInputStream baseFile = new ObjectInputStream((new FileInputStream("base.txt")));
+
+            faculties = (Map<String, Faculty>) baseFile.readObject();
+            baseFile.close();
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     //-------------------AdminService implementation---------------------------
 
@@ -46,6 +110,30 @@ public class FacultyService implements AdminService, LecturerService, StudentSer
     }
 
     @Override
+    public void setPerson(int personID) {
+        Person[] currentFacultyStudents = currentFaculty.getStudents();
+        Person p = getPerson(currentFacultyStudents, personID);
+        if(p == null) {
+            Person[] currentFacultyLecturers = currentFaculty.getLecturers();
+            p = getPerson(currentFacultyLecturers, personID);
+        }
+
+        currentPerson = p;
+    }
+
+    @Override
+    public String getPersonInfo(int personID) {
+        Person[] currentFacultyStudents = currentFaculty.getStudents();
+        Person p = getPerson(currentFacultyStudents, personID);
+        if(p == null) {
+            Person[] currentFacultyLecturers = currentFaculty.getLecturers();
+            p = getPerson(currentFacultyLecturers, personID);
+        }
+        if (p == null) return null;
+        return p.toString();
+    }
+
+    @Override
     public void addPerson() {
         currentFaculty.addPerson(currentPerson);
     }
@@ -59,6 +147,29 @@ public class FacultyService implements AdminService, LecturerService, StudentSer
     public void movePersonTo(String facultyName) {
         currentFaculty.removePerson(currentPerson);
         faculties.get(facultyName).addPerson(currentPerson);
+    }
+
+    @Override
+    public int registerStudent(String name, String surname, Date birthDate, String pass, Subject[] subjects) {
+        currentFaculty.addPerson(new Student(name, surname, birthDate, pass, subjects));
+        return 0;
+    }
+
+    @Override
+    public int registerLecturer(String name, String surname, Date birthDate, String pass, Subject subject) {
+        currentFaculty.addPerson(new Lecturer(name, surname, birthDate, pass, subject));
+        return 0;
+    }
+
+    @Override
+    public String getCurrentFaculty() {
+        if(currentFaculty == null) return null;
+        return currentFaculty.getName();
+    }
+
+    @Override
+    public int getCurrentPerson() {
+        return currentPerson.getId();
     }
 
     //-------------------StudentService implementation-----------------------
@@ -87,7 +198,9 @@ public class FacultyService implements AdminService, LecturerService, StudentSer
     @Override
     public String getLecturerInfo(int lecturerID) {
         Person[] currentFacultyLecturers = currentFaculty.getLecturers();
-        return ((Lecturer) getPerson(currentFacultyLecturers, lecturerID)).toString();
+        Lecturer l = (Lecturer) getPerson(currentFacultyLecturers, lecturerID);
+        if(l == null) return null;
+        return l.toString();
     }
 
     @Override
@@ -121,7 +234,11 @@ public class FacultyService implements AdminService, LecturerService, StudentSer
     @Override
     public String getStudentInfo(int studentID) {
         Person[] currentFacultyStudents = currentFaculty.getStudents();
-        return ((Student) getPerson(currentFacultyStudents, studentID)).toString();
+        Student s = (Student) getPerson(currentFacultyStudents, studentID);
+        if(s == null) {
+            return null;
+        }
+        return s.toString();
     }
 
     @Override
@@ -131,7 +248,8 @@ public class FacultyService implements AdminService, LecturerService, StudentSer
     }
 
     @Override
-    public int[] getRank() {
+    public int[] getRank(int studentID) {
+        setStudent(studentID);
         return currentStudent.getRankJournal().getRankHistory(currentLecturer.getSubject());
     }
 
@@ -156,7 +274,7 @@ public class FacultyService implements AdminService, LecturerService, StudentSer
                 return p;
             }
         }
-        return new Student(); //empty student to avoid warning of exception from .toString in getStudentInfo()
+        return null;
     }
 
 }
