@@ -3,7 +3,10 @@ package by.tms.UniversityDB.entity;
 public enum Subject {
     MATHAN("Mathematical analysis", 0),
     NUCLEAR_PHYSICS("Nuclear physics", 1),
-    COMPUTER_SCIENCE("Computer science", 2);
+    COMPUTER_SCIENCE("Computer science", 2),
+    ASTROLOGY("Astrology", 3),
+    PARAPSYCHOLOGY("Parapsychology", 4),
+    ALCHEMY("Alchemy", 5);
 
     private final String name;
     private final int value;
@@ -22,8 +25,6 @@ public enum Subject {
 
     @Override
     public String toString() {
-        return "Subject{" +
-                "name='" + name + '\'' +
-                '}';
+        return name;
     }
 }

@@ -7,7 +7,7 @@ import java.util.Objects;
 public abstract class Person implements Serializable {
 
     private static final long serialVersionUID = 1432611242907805802L;
-    private static int firstID = 0;
+    private static int firstID = (int) (System.currentTimeMillis()/10000);
     private final int id = firstID++;
     private String name;
     private String surname;
@@ -67,11 +67,10 @@ public abstract class Person implements Serializable {
 
     @Override
     public String toString() {
-        return "Person{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", birthDate=" + birthDate +
-                '}';
+        return "Person:" +
+                "id: " + id +
+                ", name: " + name +
+                ", surname: " + surname +
+                ", birthDate: " + birthDate;
     }
 }

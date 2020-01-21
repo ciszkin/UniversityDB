@@ -72,6 +72,7 @@ public class ConsoleApp implements App {
             case "admin":
                 switch (answer) {
                     case "e"://exit
+                        adminAction.logOut();
                         stop();
                         break;
                     case "lo":
@@ -105,6 +106,12 @@ public class ConsoleApp implements App {
                     case "ladd":
                         adminAction.newLecturer();
                         break;
+                    case "pdel":
+                        adminAction.deletePerson();
+                        break;
+                    case "pmov":
+                        adminAction.movePerson();
+                        break;
                     default:
                         writer.write("No such command! Enter <h> to help.");
                         break;
@@ -114,6 +121,7 @@ public class ConsoleApp implements App {
             case "lecturer":
                 switch (answer) {
                     case "e"://exit
+                        lecturerAction.logOut();
                         stop();
                         break;
                     case "lo":
@@ -123,13 +131,13 @@ public class ConsoleApp implements App {
                     case "h":
                         lecturerAction.help();
                         break;
-                    case "studs":
+                    case "stlist":
                         lecturerAction.displayStudents();
                         break;
-                    case "ranks":
+                    case "rlist":
                         lecturerAction.displayRanks();
                         break;
-                    case "sel":
+                    case "stsel":
                         lecturerAction.selectStudent();
                         break;
                     case "mark":
@@ -144,6 +152,7 @@ public class ConsoleApp implements App {
             case "student":
                 switch (answer) {
                     case "e"://exit
+                        studentAction.logOut();
                         stop();
                         break;
                     case "lo":

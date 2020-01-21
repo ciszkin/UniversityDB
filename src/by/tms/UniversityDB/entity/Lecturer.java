@@ -40,8 +40,6 @@ public class Lecturer extends Person {
 
     @Override
     public String toString() {
-        return super.toString() + " Lecturer{" +
-                "subject='" + subject + '\'' +
-                '}';
+        return super.toString() + "subject: " + subject.getName();
     }
 }

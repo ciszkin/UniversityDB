@@ -24,9 +24,9 @@ public class LecturerAction {
 
     public void help() {
         writer.write("Accessible commands:");
-        writer.write("<studs> - displays the list of your students");
-        writer.write("<ranks> -  displays the ranks of your students");
-        writer.write("<sel> - selects current student");
+        writer.write("<stlist> - displays the list of your students");
+        writer.write("<rlist> -  displays the ranks of your students");
+        writer.write("<stsel> - selects current student");
         writer.write("<mark> - sets the mark in current student's journal");
         writer.write("-----------------------------------");
         writer.write("");
@@ -91,7 +91,7 @@ public class LecturerAction {
 
         lecturerService.setMark(answer);
 
-        writer.write("The <" + answer + "> mark is set!");
+        writer.write("The <" + answer + "> to student mark is set!");
     }
 
     public void logOut() {

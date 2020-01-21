@@ -24,36 +24,22 @@ public class VisitorAction {
     }
 
     public void login() {
-        boolean roleSelected = false;
-        String role = "";
+
         boolean logged = false;
-        writer.write("Please, select your role in our University:");
-        writer.write(" Admin - press <a/A>");
-        writer.write(" Lecturer - press <l/L>");
-        writer.write(" Student - press <s/S>");
-        while (!roleSelected) {
-            role = reader.read();
-            if (role.equalsIgnoreCase("s") ||
-                    role.equalsIgnoreCase("l")) {
-                roleSelected = true;
-                String facultyName = checkFaculty();
-                authService.setFaculty(facultyName);
-
-            } else if (role.equalsIgnoreCase("a")) {
-                roleSelected = true;
-            } else {
-                writer.write("Wrong input! Try again.");
-            }
-        }
-
+        String role = selectRole();
 
         int personID;
 
         switch (role) {
             case "a":
                 writer.write("Enter your password:");
-                if(reader.read().equals("admin1234")) (new AdminAction()).setService(authService.logInAsAdmin());
-                writer.write("Hello Administrator! Press <h> for help.");
+                if(reader.read().equals("admin1234")) {
+                    (new AdminAction()).setService(authService.logInAsAdmin());
+                    writer.write("Hello Administrator! Press <h> for help.");
+                } else {
+                    writer.write("Wrong password! Try again!");
+                }
+
                 break;
             case "l":
                 personID = getID(authService.getLecturers());
@@ -90,8 +76,9 @@ public class VisitorAction {
         authService.logOut();
     }
 
+    //------------------------------helper methods---------------------
     private String checkFaculty() {
-        writer.write("Please, enter your faculty name:");
+        writer.write("Please, enter faculty name:");
         String facultyName = "";
         boolean found = false;
 
@@ -132,5 +119,29 @@ public class VisitorAction {
             }
         }
         return answer;
+    }
+
+    private String selectRole() {
+        boolean roleSelected = false;
+        String role = "";
+        writer.write("Please, select your role in our University:");
+        writer.write(" Admin - press <a/A>");
+        writer.write(" Lecturer - press <l/L>");
+        writer.write(" Student - press <s/S>");
+        while (!roleSelected) {
+            role = reader.read();
+            if (role.equalsIgnoreCase("s") ||
+                    role.equalsIgnoreCase("l")) {
+                roleSelected = true;
+                String facultyName = checkFaculty();
+                authService.setFaculty(facultyName);
+
+            } else if (role.equalsIgnoreCase("a")) {
+                roleSelected = true;
+            } else {
+                writer.write("Wrong input! Try again.");
+            }
+        }
+        return  role;
     }
 }

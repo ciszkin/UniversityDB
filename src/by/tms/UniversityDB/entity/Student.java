@@ -39,8 +39,6 @@ public class Student extends Person {
 
     @Override
     public String toString() {
-        return super.toString() + " Student{" +
-                "rankJournal=" + rankJournal +
-                '}';
+        return super.toString() + rankJournal;
     }
 }

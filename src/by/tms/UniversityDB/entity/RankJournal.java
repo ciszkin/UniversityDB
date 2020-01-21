@@ -34,8 +34,6 @@ public class RankJournal implements Serializable {
 
     @Override
     public String toString() {
-        return "RankJournal{" +
-                "values=" + values +
-                '}';
+        return "Subjects: " + values.keySet();
     }
 }

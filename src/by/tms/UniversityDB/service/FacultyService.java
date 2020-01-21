@@ -16,9 +16,7 @@ public class FacultyService implements AdminService, LecturerService, StudentSer
     private Student currentStudent = null;
     private Lecturer currentLecturer = null;
     private Person currentPerson = null;
-
-
-
+    
 
     public FacultyService() {
     }
@@ -27,30 +25,28 @@ public class FacultyService implements AdminService, LecturerService, StudentSer
 
     @Override
     public StudentService logInAsStudent(int personID, String pass) {
-        Person[] currentFacultyStudents = currentFaculty.getStudents();
-        currentPerson = getPerson(currentFacultyStudents, personID);
+        currentPerson = getPersonID(currentFaculty.getStudents(), personID);
         if(currentPerson != null && currentPerson.getPass().equals(pass)) {
             return this;
         } else {
             return null;
         }
-    }
+    }//ok
 
     @Override
     public LecturerService logInAsLecturer(int personID, String pass) {
-        Person[] currentFacultyLecturers = currentFaculty.getLecturers();
-        currentPerson = getPerson(currentFacultyLecturers, personID);
+        currentPerson = getPersonID(currentFaculty.getLecturers(), personID);
         if (currentPerson != null && currentPerson.getPass().equals(pass)) {
             return this;
         } else {
             return null;
         }
-    }
+    }//ok
 
     @Override
     public FacultyService logInAsAdmin() {
         return this;
-    }
+    }//ok
 
     @Override
     public void logOut() {
@@ -63,11 +59,11 @@ public class FacultyService implements AdminService, LecturerService, StudentSer
             e.printStackTrace();
         }
 
-    }
+    }//ok
 
     @Override
     public void loadBase() {
-        System.out.println("Try to load base!");
+
         try {
             ObjectInputStream baseFile = new ObjectInputStream((new FileInputStream("base.txt")));
 
@@ -77,7 +73,7 @@ public class FacultyService implements AdminService, LecturerService, StudentSer
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-    }
+    }//TODO something wrong with downcast 
 
     //-------------------AdminService implementation---------------------------
 
@@ -85,92 +81,82 @@ public class FacultyService implements AdminService, LecturerService, StudentSer
     public void addFaculty(String facultyName) {
         if(faculties.containsKey(facultyName)) return;
         faculties.put(facultyName, new Faculty(facultyName));
-    }
+    }//ok
 
     @Override
     public String[] getFaculties() {
         return faculties.keySet().toArray(new String[0]);
-    }
+    }//ok
 
     @Override
     public void setFaculty(String facultyName) {
         currentFaculty = faculties.get(facultyName);
-    }
+    }//ok
 
     @Override
     public int[] getStudents() {
-        Person[] currentFacultyStudents = currentFaculty.getStudents();
-        return getPersons(currentFacultyStudents);
-    }
+        return getPersonsIDs(currentFaculty.getStudents());
+    }//ok
 
     @Override
     public int[] getLecturers() {
-        Person[] currentFacultyLecturers = currentFaculty.getLecturers();
-        return getPersons(currentFacultyLecturers);
-    }
+        return getPersonsIDs(currentFaculty.getLecturers());
+    }//ok
 
     @Override
     public void setPerson(int personID) {
-        Person[] currentFacultyStudents = currentFaculty.getStudents();
-        Person p = getPerson(currentFacultyStudents, personID);
-        if(p == null) {
-            Person[] currentFacultyLecturers = currentFaculty.getLecturers();
-            p = getPerson(currentFacultyLecturers, personID);
-        }
+        Person p = getPersonID(currentFaculty.getStudents(), personID);
+        if(p == null) p = getPersonID(currentFaculty.getLecturers(), personID);
 
         currentPerson = p;
-    }
+    }//ok
 
     @Override
     public String getPersonInfo(int personID) {
-        Person[] currentFacultyStudents = currentFaculty.getStudents();
-        Person p = getPerson(currentFacultyStudents, personID);
-        if(p == null) {
-            Person[] currentFacultyLecturers = currentFaculty.getLecturers();
-            p = getPerson(currentFacultyLecturers, personID);
-        }
+        Person p = getPersonID(currentFaculty.getStudents(), personID);
+        if(p == null) p = getPersonID(currentFaculty.getLecturers(), personID);
         if (p == null) return null;
         return p.toString();
-    }
+    }//TODO refactor to avoid returning 'null'
 
     @Override
     public void addPerson() {
         currentFaculty.addPerson(currentPerson);
-    }
+    }//ok
 
     @Override
     public void removePerson() {
         currentFaculty.removePerson(currentPerson);
-    }
+    }//ok
 
     @Override
     public void movePersonTo(String facultyName) {
         currentFaculty.removePerson(currentPerson);
         faculties.get(facultyName).addPerson(currentPerson);
-    }
+    }//ok
 
     @Override
     public int registerStudent(String name, String surname, Date birthDate, String pass, Subject[] subjects) {
         currentFaculty.addPerson(new Student(name, surname, birthDate, pass, subjects));
         return 0;
-    }
+    }//ok
 
     @Override
     public int registerLecturer(String name, String surname, Date birthDate, String pass, Subject subject) {
         currentFaculty.addPerson(new Lecturer(name, surname, birthDate, pass, subject));
         return 0;
-    }
+    }//ok
 
     @Override
     public String getCurrentFaculty() {
         if(currentFaculty == null) return null;
         return currentFaculty.getName();
-    }
+    }//ok
 
     @Override
     public int getCurrentPerson() {
         return currentPerson.getId();
-    }
+    }//ok
 
     //-------------------StudentService implementation-----------------------
 
@@ -186,32 +172,31 @@ public class FacultyService implements AdminService, LecturerService, StudentSer
 
         }
 
-        return getPersons(myLecturers.toArray(new Person[0]));
-    }
+        return getPersonsIDs(myLecturers.toArray(new Person[0]));
+    }//ok
 
     @Override
     public void setLecturer(int lecturerID) {
-        Person[] currentFacultyLecturers = currentFaculty.getLecturers();
-        currentLecturer = (Lecturer) getPerson(currentFacultyLecturers, lecturerID);
-    }
+        currentLecturer = (Lecturer) getPersonID(currentFaculty.getLecturers(), lecturerID);
+    }//ok
 
     @Override
     public String getLecturerInfo(int lecturerID) {
-        Person[] currentFacultyLecturers = currentFaculty.getLecturers();
-        Lecturer l = (Lecturer) getPerson(currentFacultyLecturers, lecturerID);
+        //Person[] currentFacultyLecturers = ;
+        Lecturer l = (Lecturer) getPersonID(currentFaculty.getLecturers(), lecturerID);
         if(l == null) return null;
         return l.toString();
-    }
+    }//TODO refactor to avoid returning 'null'
 
     @Override
     public int[] getMyRank(Subject subject) {
         return currentStudent.getRankJournal().getRankHistory(subject);
-    }
+    }//ok
 
     @Override
     public Subject[] getSubjects() {
         return currentStudent.getRankJournal().getSubjects();
-    }
+    }//ok
 
     //--------------LecturerService implementation
 
@@ -228,24 +213,20 @@ public class FacultyService implements AdminService, LecturerService, StudentSer
 
         }
 
-        return getPersons(myStudents.toArray(new Person[0]));
-    }
+        return getPersonsIDs(myStudents.toArray(new Person[0]));
+    }//ok
 
     @Override
     public String getStudentInfo(int studentID) {
-        Person[] currentFacultyStudents = currentFaculty.getStudents();
-        Student s = (Student) getPerson(currentFacultyStudents, studentID);
-        if(s == null) {
-            return null;
-        }
+        Student s = (Student) getPersonID(currentFaculty.getStudents(), studentID);
+        if(s == null) return null;
         return s.toString();
-    }
+    }//TODO refactor to avoid returning 'null'
 
     @Override
     public void setStudent(int studentID) {
-        Person[] currentFacultyStudents = currentFaculty.getStudents();
-        currentStudent = (Student) getPerson(currentFacultyStudents, studentID);
-    }
+        currentStudent = (Student) getPersonID(currentFaculty.getStudents(), studentID);
+    }//ok
 
     @Override
     public int[] getRank(int studentID) {
@@ -256,10 +237,10 @@ public class FacultyService implements AdminService, LecturerService, StudentSer
     @Override
     public void setMark(int mark) {
         currentStudent.getRankJournal().setRank(currentLecturer.getSubject(), mark);
-    }
+    }//ok
 
     //------------helper methods---------------
-    private int[] getPersons(Person[] persons) {
+    private int[] getPersonsIDs(Person[] persons) {
         int[] answer = new int[persons.length];
         for(int i = 0; i < persons.length; i++) {
             answer[i] = persons[i].getId();
@@ -268,13 +249,13 @@ public class FacultyService implements AdminService, LecturerService, StudentSer
         return answer;
     }
 
-    private Person getPerson(Person[] persons, int personID) {
+    private Person getPersonID(Person[] persons, int personID) {
         for(Person p: persons) {
             if (p.getId() == personID) {
                 return p;
             }
         }
         return null;
-    }
+    }//TODO refactor to avoid returning 'null'
 
 }

@@ -57,10 +57,10 @@ public class Faculty implements Serializable {
 
     @Override
     public String toString() {
-        return "Faculty{" +
-                "name='" + name + '\'' +
-                ", students=" + students.size() +
-                ", lecturers=" + lecturers.size() +
+        return "Faculty: " +
+                "name: " + name +
+                ", students: " + students.size() +
+                ", lecturers: " + lecturers.size() +
                 '}';
     }
 }
